@@ -1,3 +1,4 @@
+
 import { useMemo, useState } from 'react';
 import useCurrencyInfo from './hooks/useCurrencyInfo.js';
 import CurrencyInput from './Components/CurrencyInput';
@@ -9,11 +10,17 @@ function App() {
   const [convertedAmount, setConvertedAmount] = useState(0);
 
   const currencyInfo = useCurrencyInfo(currencyFrom);
-  const options = useMemo(() => Object.keys(currencyInfo || {}), [currencyInfo]);
+
+  const options = useMemo(
+    () => Object.keys(currencyInfo || {}),
+    [currencyInfo]
+  );
 
   const rate = currencyInfo?.[currencyTo] || 0;
   const convertedValue = Number(amount) * rate;
-  const displayedAmount = convertedAmount || convertedValue;
+
+  const displayedAmount =
+    convertedAmount !== 0 ? convertedAmount : convertedValue;
 
   const handleConvert = () => {
     setConvertedAmount(convertedValue);
@@ -22,112 +29,174 @@ function App() {
   const handleSwap = () => {
     setCurrencyFrom(currencyTo);
     setCurrencyTo(currencyFrom);
-    setAmount(convertedAmount || convertedValue);
+    setAmount(displayedAmount);
     setConvertedAmount(0);
   };
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.35),_transparent_28%),radial-gradient(circle_at_bottom_left,_rgba(251,146,60,0.25),_transparent_24%),radial-gradient(circle_at_bottom_right,_rgba(168,85,247,0.28),_transparent_26%),linear-gradient(135deg,#070b17_0%,#111827_22%,#1e1b4b_50%,#0f172a_100%)] px-4 py-10 text-slate-900">
-      <div className="absolute inset-0 -z-10 bg-[url('https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center opacity-25" />
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(135deg,rgba(7,11,23,0.88),rgba(15,23,42,0.74),rgba(30,27,75,0.68))]" />
-      <div className="absolute left-1/2 top-20 h-80 w-80 -translate-x-1/2 rounded-full bg-cyan-400/25 blur-3xl" />
-      <div className="absolute bottom-10 right-8 h-72 w-72 rounded-full bg-fuchsia-500/25 blur-3xl" />
-      <div className="absolute bottom-20 left-12 h-64 w-64 rounded-full bg-orange-400/20 blur-3xl" />
-
-      <div className="mx-auto flex min-h-[90vh] max-w-xl items-center justify-center">
-        <div className="w-full">
-          <div className="mb-8 text-center text-white">
-            <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border border-cyan-300/30 bg-gradient-to-br from-cyan-400/25 via-blue-500/25 to-violet-500/25 text-3xl shadow-[0_0_30px_rgba(34,211,238,0.5)] backdrop-blur-md">
-              💱
+    <main className="min-h-screen bg-[#f6f8fc] px-4 py-8 sm:px-6">
+      <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-5xl items-center justify-center">
+        <div className="grid w-full items-center gap-12 lg:grid-cols-2">
+          
+          {/* Left side */}
+          <section className="hidden lg:block">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-600">
+              <span className="h-2 w-2 rounded-full bg-emerald-500" />
+              Live exchange rates
             </div>
-            <span className="inline-flex items-center rounded-full border border-cyan-300/40 bg-cyan-500/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-cyan-100 shadow-[0_0_20px_rgba(34,211,238,0.25)]">
-              Live FX
-            </span>
-            <h1 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">
-              Currency Converter
+
+            <h1 className="max-w-lg text-5xl font-bold leading-[1.08] tracking-tight text-slate-950">
+              Convert currencies
+              <span className="block text-blue-600">
+                without the confusion.
+              </span>
             </h1>
-            <p className="mt-3 text-sm text-blue-100/75 sm:text-base">
-              Fast, clear exchange rates for today’s market.
-            </p>
-          </div>
 
-          <div className="rounded-[30px] border border-white/20 bg-white/85 p-5 shadow-[0_35px_100px_rgba(15,23,42,0.75)] backdrop-blur-xl ring-1 ring-white/30 sm:p-7">
-            <div className="mb-4 flex items-center justify-between rounded-2xl border border-cyan-200/80 bg-gradient-to-r from-cyan-50 via-blue-50 to-violet-50 px-4 py-3 shadow-[0_10px_30px_rgba(59,130,246,0.12)]">
+            <p className="mt-6 max-w-md text-lg leading-8 text-slate-500">
+              A simple and fast way to convert between currencies using
+              up-to-date exchange rates.
+            </p>
+
+            <div className="mt-8 flex gap-6 text-sm text-slate-500">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                  Market rate
-                </p>
-                <p className="mt-1 text-sm font-semibold text-slate-700">
-                  {rate ? `1 ${currencyFrom} = ${Number(rate).toFixed(4)} ${currencyTo}` : 'Loading rates...'}
-                </p>
+                <p className="font-semibold text-slate-900">150+</p>
+                <p>currencies</p>
               </div>
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 text-xl text-emerald-600">
-                ✓
+
+              <div className="h-10 w-px bg-slate-200" />
+
+              <div>
+                <p className="font-semibold text-slate-900">Live</p>
+                <p>exchange rates</p>
               </div>
             </div>
+          </section>
 
-            <CurrencyInput
-              label="You send"
-              amount={amount}
-              currency={currencyFrom}
-              onAmountChange={(e) => setAmount(Number(e.target.value) || 0)}
-              onCurrencyChange={(e) => setCurrencyFrom(e.target.value.toUpperCase())}
-              currencyOptions={options}
-              amountDisable={false}
-            />
+          {/* Converter */}
+          <section className="w-full max-w-lg mx-auto lg:mx-0 lg:ml-auto">
+            <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] sm:p-7">
+              
+              {/* Header */}
+              <div className="mb-7">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                      Currency converter
+                    </p>
 
-            <div className="relative my-2 flex justify-center">
-              <div className="absolute left-0 top-1/2 h-px w-full bg-slate-200" />
+                    <h2 className="mt-1 text-2xl font-bold tracking-tight text-slate-950">
+                      Convert money
+                    </h2>
+                  </div>
+
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-lg">
+                    💱
+                  </div>
+                </div>
+              </div>
+
+              {/* Rate */}
+              <div className="mb-5 flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3">
+                <div>
+                  <p className="text-[11px] font-medium uppercase tracking-wider text-slate-400">
+                    Exchange rate
+                  </p>
+
+                  <p className="mt-1 text-sm font-semibold text-slate-800">
+                    {rate
+                      ? `1 ${currencyFrom} = ${Number(rate).toFixed(4)} ${currencyTo}`
+                      : 'Loading rate...'}
+                  </p>
+                </div>
+
+                {rate > 0 && (
+                  <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-600">
+                    Live
+                  </span>
+                )}
+              </div>
+
+              {/* From */}
+              <CurrencyInput
+                label="You send"
+                amount={amount}
+                currency={currencyFrom}
+                onAmountChange={(e) =>
+                  setAmount(Number(e.target.value) || 0)
+                }
+                onCurrencyChange={(e) =>
+                  setCurrencyFrom(e.target.value.toUpperCase())
+                }
+                currencyOptions={options}
+                amountDisable={false}
+              />
+
+              {/* Swap */}
+              <div className="relative my-2 flex items-center justify-center">
+                <div className="absolute h-px w-full bg-slate-200" />
+
+                <button
+                  type="button"
+                  onClick={handleSwap}
+                  aria-label="Swap currencies"
+                  title="Swap currencies"
+                  className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-lg text-slate-600 shadow-sm transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600 active:scale-95"
+                >
+                  ⇅
+                </button>
+              </div>
+
+              {/* To */}
+              <CurrencyInput
+                label="You receive"
+                amount={displayedAmount}
+                currency={currencyTo}
+                onAmountChange={() => {}}
+                onCurrencyChange={(e) =>
+                  setCurrencyTo(e.target.value.toUpperCase())
+                }
+                currencyOptions={options}
+                amountDisable={true}
+              />
+
+              {/* Convert */}
               <button
                 type="button"
-                onClick={handleSwap}
-                className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full border border-cyan-200 bg-gradient-to-br from-cyan-400 to-blue-500 text-xl text-white shadow-[0_12px_25px_rgba(59,130,246,0.4)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_30px_rgba(59,130,246,0.45)] active:scale-95"
-                title="Swap currencies"
-                aria-label="Swap currencies"
+                onClick={handleConvert}
+                disabled={!amount || !rate}
+                className="mt-1 w-full rounded-xl bg-blue-600 px-5 py-4 text-sm font-semibold text-white transition hover:bg-blue-700 active:scale-[0.99] disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
               >
-                ⇅
+                Convert {currencyFrom} → {currencyTo}
               </button>
-            </div>
 
-            <CurrencyInput
-              label="You receive"
-              amount={displayedAmount}
-              currency={currencyTo}
-              onAmountChange={() => {}}
-              onCurrencyChange={(e) => setCurrencyTo(e.target.value.toUpperCase())}
-              currencyOptions={options}
-              amountDisable={true}
-            />
+              {/* Result */}
+              <div className="mt-5 rounded-xl border border-blue-100 bg-blue-50/60 px-4 py-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[11px] font-medium uppercase tracking-wider text-blue-500">
+                      You receive
+                    </p>
 
-            <button
-              type="button"
-              onClick={handleConvert}
-              disabled={!amount || !rate}
-              className="mt-4 w-full rounded-2xl bg-gradient-to-r from-pink-500 via-orange-400 to-yellow-400 py-4 text-sm font-bold tracking-wide text-white shadow-[0_18px_35px_rgba(249,115,22,0.45)] transition-all duration-200 hover:scale-[1.01] hover:shadow-[0_22px_45px_rgba(236,72,153,0.50)] active:scale-[0.99] disabled:cursor-not-allowed disabled:from-slate-300 disabled:to-slate-300 disabled:shadow-none"
-            >
-              Convert {currencyFrom} → {currencyTo}
-            </button>
+                    <p className="mt-1 text-2xl font-bold tracking-tight text-slate-950">
+                      {displayedAmount.toFixed(2)}
+                      <span className="ml-2 text-sm font-semibold text-blue-600">
+                        {currencyTo}
+                      </span>
+                    </p>
+                  </div>
 
-            <div className="mt-5 rounded-2xl bg-gradient-to-r from-pink-50 via-orange-50 to-yellow-50 p-4 shadow-inner shadow-orange-100 ring-1 ring-orange-100">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
-                    Amount
-                  </p>
-                  <p className="mt-1 text-xl font-extrabold tracking-tight text-slate-900">
-                    {displayedAmount.toFixed(2)} <span className="text-base text-blue-600">{currencyTo}</span>
-                  </p>
-                </div>
-                <div className="rounded-full bg-gradient-to-r from-pink-100 to-orange-100 px-3 py-1 text-xs font-bold text-orange-700 shadow-sm">
-                  {currencyTo}
+                  <div className="rounded-lg bg-white px-3 py-2 text-xs font-semibold text-blue-600 shadow-sm">
+                    {currencyTo}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <p className="mt-5 text-center text-xs text-blue-100/60">
-            Exchange rates update automatically as the market changes.
-          </p>
+            <p className="mt-4 text-center text-xs text-slate-400">
+              Exchange rates are fetched automatically when you change
+              currencies.
+            </p>
+          </section>
         </div>
       </div>
     </main>
@@ -135,3 +204,4 @@ function App() {
 }
 
 export default App;
+

@@ -1,15 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-
 @import "tailwindcss";
-
 :root {
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
   color: #0f172a;
-  background: #020817;
+  background: #f6f8fc;
 }
 
 * {
@@ -24,10 +23,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background:
-    radial-gradient(circle at top, rgba(59, 130, 246, 0.15), transparent 25%),
-    radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.18), transparent 20%),
-    #020817;
+  background: #f6f8fc;
 }
 
 #root {
@@ -40,9 +36,15 @@ select {
   font: inherit;
 }
 
-::selection {
-  background: rgba(96, 165, 250, 0.35);
+button {
+  -webkit-tap-highlight-color: transparent;
 }
+
+::selection {
+  background: rgba(37, 99, 235, 0.15);
+}
+
+/* Remove number input arrows */
 
 input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {
@@ -55,24 +57,29 @@ input[type='number'] {
   -moz-appearance: textfield;
 }
 
+/* Scrollbar */
+
 ::-webkit-scrollbar {
-  width: 9px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.08);
+  background: #f1f5f9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(100, 116, 139, 0.7);
+  background: #cbd5e1;
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(51, 65, 85, 0.9);
+  background: #94a3b8;
 }
+
+/* Select dropdown */
 
 select option {
   background: white;
   color: #0f172a;
 }
+
